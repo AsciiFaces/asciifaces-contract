@@ -34,7 +34,17 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
 
         setBaseURI("https://api.asciifaces.com/face/");
 
-        _registerToken(1, owner());
+        // mint 10 genesis faces
+        _registerToken(27, owner()); // ꒰✜益✜꒱
+        _registerToken(60, owner()); // ~|◕o◕|~
+        _registerToken(88, owner()); // (ʘ̆___ʘ̆)⌐
+        _registerToken(116, owner()); // :ʘ̆⌂ʘ̆:
+        _registerToken(156, owner()); // ヽ༼©ェ©༽ﾉ
+        _registerToken(242, owner()); // ◕ᴥ◕
+        _registerToken(332, owner()); // ⊂(ⱺ..ⱺ)つ
+        _registerToken(351, owner()); // ╚(°<>°)╝
+        _registerToken(424, owner()); // ⊂(ㆆ___ㆆ)つ
+        _registerToken(438, owner()); // |(◕︹◕)|
     }
 
     function getFace(uint256 id) external view returns (string memory) {
@@ -51,15 +61,15 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         uint256 totalSupply = _tokenIdCounter.current();
 
         if (totalSupply <= 1000) {
-            price = 15000000000000000; // 0.015
-        } else if (totalSupply <= 2000 && totalSupply > 1000) {
             price = 25000000000000000; // 0.025
-        } else if (totalSupply <= 3000 && totalSupply > 2000) {
+        } else if (totalSupply <= 2000 && totalSupply > 1000) {
             price = 50000000000000000; // 0.05
-        } else if (totalSupply <= 4000 && totalSupply > 3000) {
+        } else if (totalSupply <= 3000 && totalSupply > 2000) {
             price = 100000000000000000; // 0.1
-        } else if (totalSupply > 4000) {
+        } else if (totalSupply <= 4000 && totalSupply > 3000) {
             price = 200000000000000000; // 0.2
+        } else if (totalSupply > 4000) {
+            price = 400000000000000000; // 0.4
         }
 
         return price;
