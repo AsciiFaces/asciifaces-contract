@@ -46,8 +46,23 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return face;
     }
 
-    function calculatePrice() public pure returns (uint256) {
-        return 50000000000000000;
+    function calculatePrice() public view returns (uint256) {
+        uint256 price;
+        uint256 totalSupply = _tokenIdCounter.current();
+
+        if (totalSupply <= 1000) {
+            price = 15000000000000000; // 0.015
+        } else if (totalSupply <= 2000 && totalSupply > 1000) {
+            price = 25000000000000000; // 0.025
+        } else if (totalSupply <= 3000 && totalSupply > 2000) {
+            price = 50000000000000000; // 0.05
+        } else if (totalSupply <= 4000 && totalSupply > 3000) {
+            price = 100000000000000000; // 0.1
+        } else if (totalSupply > 4000) {
+            price = 200000000000000000; // 0.2
+        }
+
+        return price;
     }
 
     function createFace(uint256 _seed) public returns (string memory) {
@@ -141,7 +156,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     function _getEye(uint256 _rand) internal pure returns (string[2] memory) {
         string[2][EYE_COUNT] memory eyes =
             [
-                ["unicode0", "0"],
+                ["0", "0"],
                 [unicode"◉", unicode"◉"],
                 [unicode"ㆆ", unicode"ㆆ"],
                 [unicode"⌒", unicode"⌒"],
