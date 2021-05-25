@@ -18,8 +18,24 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     uint256 private constant MOUTH_COUNT = 43;
     uint256 private constant EDGE_COUNT = 41;
 
+    bool public hasSaleStarted = false;
+
+    string public baseURI;
+
     constructor() ERC721("AsciiFaces", "ASF") {
         return;
+    }
+
+    function startSale() public onlyOwner {
+        hasSaleStarted = true;
+    }
+
+    function pauseSale() public onlyOwner {
+        hasSaleStarted = false;
+    }
+
+    function setBaseURI(string memory baseURI_) public onlyOwner {
+        baseURI = baseURI_;
     }
 
     function getFace(uint256 id) external view returns (string memory) {
@@ -221,6 +237,10 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         uint256 mouthId = _rand % MOUTH_COUNT;
 
         return mouths[mouthId];
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
     }
 
     function _beforeTokenTransfer(
