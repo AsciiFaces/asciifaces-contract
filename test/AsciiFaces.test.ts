@@ -12,6 +12,7 @@ describe("AsciiFaces", () => {
 
     const signers: SignerWithAddress[] = await hre.ethers.getSigners();
     this.signers.admin = signers[0];
+    this.signers.bob = signers[1];
   });
 
   beforeEach(async function () {
@@ -26,6 +27,20 @@ describe("AsciiFaces", () => {
 
       expect(name).to.be.equal("AsciiFaces");
       expect(symbol).to.be.equal("ASF");
+    });
+  });
+
+  describe("Start / stop sale", function () {
+    it("should start sale", async function () {
+      await this.asciiface.startSale();
+      const hasSaleStarted = await this.asciiface.hasSaleStarted();
+
+      expect(hasSaleStarted).to.be.eq(true);
+    });
+
+    it("only allow owner to start sale", async function () {
+      await expect(this.asciiface.connect(this.signers.bob).startSale()).to.be.reverted;
+      await expect(this.asciiface.connect(this.signers.bob).pauseSale()).to.be.reverted;
     });
   });
 });

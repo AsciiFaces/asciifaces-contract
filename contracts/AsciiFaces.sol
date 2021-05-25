@@ -23,7 +23,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     string public baseURI;
 
     constructor() ERC721("AsciiFaces", "ASF") {
-        return;
+        setBaseURI("https://api.asciifaces.com/face/");
     }
 
     function startSale() public onlyOwner {
