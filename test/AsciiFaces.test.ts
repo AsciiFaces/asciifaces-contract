@@ -5,6 +5,7 @@ import { Artifact } from "hardhat/types";
 import { AsciiFaces } from "../typechain";
 import { deployContract } from "ethereum-waffle";
 import { expect } from "chai";
+import { WETHMock } from "../typechain/WETHMock";
 
 describe("AsciiFaces", () => {
   before(async function () {
@@ -17,7 +18,10 @@ describe("AsciiFaces", () => {
 
   beforeEach(async function () {
     const asciifaceArtifact: Artifact = await hre.artifacts.readArtifact("AsciiFaces");
-    this.asciiface = <AsciiFaces>await deployContract(this.signers.admin, asciifaceArtifact);
+    const wethMockArtifact: Artifact = await hre.artifacts.readArtifact("WETHMock");
+
+    this.mockETH = <WETHMock>await deployContract(this.signers.admin, wethMockArtifact);
+    this.asciiface = <AsciiFaces>await deployContract(this.signers.admin, asciifaceArtifact, [this.mockETH.address]);
   });
 
   describe("Deploy Contract", function () {
@@ -27,6 +31,12 @@ describe("AsciiFaces", () => {
 
       expect(name).to.be.equal("AsciiFaces");
       expect(symbol).to.be.equal("ASF");
+    });
+
+    it("should mint genesis token", async function () {
+      const face = await this.asciiface.getFace(1);
+
+      console.log(face);
     });
   });
 

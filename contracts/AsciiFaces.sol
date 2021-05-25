@@ -2,12 +2,15 @@
 pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
+    using SafeERC20 for IERC20;
 
     Counters.Counter private _tokenIdCounter;
 
@@ -18,24 +21,20 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     uint256 private constant MOUTH_COUNT = 43;
     uint256 private constant EDGE_COUNT = 41;
 
+    IERC20 internal wETH;
+
+    uint256 public constant MAX_SUPPLY = 10000;
+
     bool public hasSaleStarted = false;
 
     string public baseURI;
 
-    constructor() ERC721("AsciiFaces", "ASF") {
+    constructor(address weth) ERC721("AsciiFaces", "ASF") {
+        wETH = IERC20(weth);
+
         setBaseURI("https://api.asciifaces.com/face/");
-    }
 
-    function startSale() public onlyOwner {
-        hasSaleStarted = true;
-    }
-
-    function pauseSale() public onlyOwner {
-        hasSaleStarted = false;
-    }
-
-    function setBaseURI(string memory baseURI_) public onlyOwner {
-        baseURI = baseURI_;
+        _registerToken(1, owner());
     }
 
     function getFace(uint256 id) external view returns (string memory) {
@@ -52,19 +51,28 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     }
 
     function createFace(uint256 _seed) public returns (string memory) {
+        require(hasSaleStarted == true, "Sale hasn't started");
+        require(_tokenIdCounter.current() <= MAX_SUPPLY, "Sale has ended, you can still buy on secondary market");
+
+        wETH.safeTransferFrom(msg.sender, address(this), calculatePrice());
+
         uint256 seed =
             uint256(keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, _tokenIdCounter.current())));
 
         require(seedToId[seed] == 0, "ERC721: seed already used");
 
+        return _registerToken(seed, msg.sender);
+    }
+
+    function _registerToken(uint256 _seed, address to) internal returns (string memory) {
         _tokenIdCounter.increment();
 
-        idToSeed[_tokenIdCounter.current()] = seed;
-        seedToId[seed] = _tokenIdCounter.current();
+        idToSeed[_tokenIdCounter.current()] = _seed;
+        seedToId[_seed] = _tokenIdCounter.current();
 
         string memory face = _createFace(idToSeed[_tokenIdCounter.current()]);
 
-        _mint(msg.sender, _tokenIdCounter.current());
+        _mint(to, _tokenIdCounter.current());
 
         return face;
     }
@@ -241,6 +249,18 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
 
     function _baseURI() internal view override returns (string memory) {
         return baseURI;
+    }
+
+    function startSale() public onlyOwner {
+        hasSaleStarted = true;
+    }
+
+    function pauseSale() public onlyOwner {
+        hasSaleStarted = false;
+    }
+
+    function setBaseURI(string memory baseURI_) public onlyOwner {
+        baseURI = baseURI_;
     }
 
     function _beforeTokenTransfer(
