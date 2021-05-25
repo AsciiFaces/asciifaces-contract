@@ -35,8 +35,8 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         setBaseURI("https://api.asciifaces.com/face/");
 
         // mint 10 genesis faces
-        _registerToken(27, owner()); // ꒰✜益✜꒱
         _registerToken(60, owner()); // ~|◕o◕|~
+        _registerToken(27, owner()); // ꒰✜益✜꒱
         _registerToken(88, owner()); // (ʘ̆___ʘ̆)⌐
         _registerToken(116, owner()); // :ʘ̆⌂ʘ̆:
         _registerToken(156, owner()); // ヽ༼©ェ©༽ﾉ
