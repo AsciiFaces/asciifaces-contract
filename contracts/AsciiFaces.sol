@@ -276,11 +276,11 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return baseURI;
     }
 
-    function startSale() public onlyOwner {
+    function startSale() external onlyOwner {
         hasSaleStarted = true;
     }
 
-    function pauseSale() public onlyOwner {
+    function pauseSale() external onlyOwner {
         hasSaleStarted = false;
     }
 
