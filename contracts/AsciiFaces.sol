@@ -102,7 +102,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return face;
     }
 
-    function _createFace(uint256 _seed) public pure returns (string memory) {
+    function _createFace(uint256 _seed) internal pure returns (string memory) {
         uint256 rand = uint256(keccak256(abi.encodePacked(_seed)));
 
         string[2] memory edge = _getEdge(rand);
