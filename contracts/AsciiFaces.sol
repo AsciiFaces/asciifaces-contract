@@ -23,7 +23,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
 
     IERC20 internal wETH;
 
-    uint256 public constant MAX_SUPPLY = 10000;
+    uint256 public constant MAX_SUPPLY = 5000;
 
     bool public hasSaleStarted = false;
 
