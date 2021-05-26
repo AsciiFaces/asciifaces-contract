@@ -17,5 +17,12 @@
   "solidity.packageDefaultDependenciesDirectory": "node_modules",
   "solidity-va.deco.statevars": true,
   "solidity-va.preview.markdown": true,
-  "cSpell.words": ["asciiface"]
+  "cSpell.words": [
+    "asciiface"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#54035B",
+    "titleBar.activeBackground": "#75047F",
+    "titleBar.activeForeground": "#FEFAFF"
+  }
 }
