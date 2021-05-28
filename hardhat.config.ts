@@ -50,6 +50,13 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545/",
     },
+    testnet: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      chainId: 80001,
+      accounts: {
+        mnemonic,
+      },
+    },
   },
   paths: {
     artifacts: "./artifacts",

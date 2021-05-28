@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 
 import { AsciiFaces__factory } from "../typechain";
 
@@ -6,10 +6,22 @@ async function main(): Promise<void> {
   const WethMockFactory = await ethers.getContractFactory("WETHMock");
   const AsciiFaceFactory: AsciiFaces__factory = await ethers.getContractFactory("AsciiFaces");
 
-  const wethMock = await WethMockFactory.deploy();
-  await wethMock.deployed();
+  const networkName = network.name;
 
-  const asciiface = await AsciiFaceFactory.deploy(wethMock.address);
+  let WETH: string;
+
+  if (networkName === "testnet") {
+    WETH = "0x2d7882bedcbfddce29ba99965dd3cdf7fcb10a1e";
+  } else if (networkName === "mainnet") {
+    WETH = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+  } else {
+    const wethMock = await WethMockFactory.deploy();
+    await wethMock.deployed();
+
+    WETH = wethMock.address;
+  }
+
+  const asciiface = await AsciiFaceFactory.deploy(WETH);
 
   console.log("Greeter deployed to: ", asciiface.address);
 }
