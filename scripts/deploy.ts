@@ -23,7 +23,8 @@ async function main(): Promise<void> {
 
   const asciiface = await AsciiFaceFactory.deploy(WETH);
 
-  console.log("Greeter deployed to: ", asciiface.address);
+  console.log("WETH Address : " + WETH);
+  console.log("Contract deployed to: ", asciiface.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere and properly handle errors.
