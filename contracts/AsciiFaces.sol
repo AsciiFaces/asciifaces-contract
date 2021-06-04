@@ -17,9 +17,9 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     mapping(uint256 => uint256) internal idToSeed;
     mapping(uint256 => uint256) internal seedToId;
 
-    uint256 private constant EYE_COUNT = 50;
-    uint256 private constant MOUTH_COUNT = 43;
-    uint256 private constant EDGE_COUNT = 33;
+    uint256 private constant EYE_COUNT = 51;
+    uint256 private constant MOUTH_COUNT = 44;
+    uint256 private constant EDGE_COUNT = 34;
 
     IERC20 internal wETH;
 
@@ -102,7 +102,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return face;
     }
 
-    function _createFace(uint256 _seed) internal pure returns (string memory) {
+    function _createFace(uint256 _seed) public pure returns (string memory) {
         uint256 rand = uint256(keccak256(abi.encodePacked(_seed)));
 
         string[2] memory edge = _getEdge(rand);
@@ -115,6 +115,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     function _getEdge(uint256 _rand) internal pure returns (string[2] memory) {
         string[2][EDGE_COUNT] memory edges =
             [
+                [unicode"", unicode""],
                 [unicode"(", unicode")"],
                 [unicode"ヽ(", unicode")ﾉ"],
                 [unicode"<(", unicode")>"],
@@ -134,7 +135,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
                 [unicode"{", unicode"}"],
                 [unicode"〜(", unicode")〜"],
                 [unicode"〣(", unicode")〣"],
-                [unicode"▓▒░(", unicode")░▒▓"],
+                [unicode"░(", unicode")░"],
                 [unicode"ヽ(", unicode")┌"],
                 [unicode"┐(", unicode")┌"],
                 [unicode"~|", unicode"|~"],
@@ -158,6 +159,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     function _getEye(uint256 _rand) internal pure returns (string[2] memory) {
         string[2][EYE_COUNT] memory eyes =
             [
+                [unicode"", unicode""],
                 [unicode"´", unicode"`"],
                 [unicode"◕", unicode"◕"],
                 [unicode"≧", unicode"≦"],
@@ -218,6 +220,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     function _getMouth(uint256 _rand) internal pure returns (string memory) {
         string[MOUTH_COUNT] memory mouths =
             [
+                unicode"",
                 unicode".",
                 unicode"_",
                 unicode"-",
