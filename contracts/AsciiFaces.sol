@@ -61,15 +61,15 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         uint256 totalSupply = _tokenIdCounter.current();
 
         if (totalSupply <= 1000) {
-            price = 25000000000000000; // 0.025
+            price = 20000000000000000; // 0.02
         } else if (totalSupply <= 2000 && totalSupply > 1000) {
-            price = 50000000000000000; // 0.05
+            price = 40000000000000000; // 0.04
         } else if (totalSupply <= 3000 && totalSupply > 2000) {
-            price = 100000000000000000; // 0.1
+            price = 80000000000000000; // 0.8
         } else if (totalSupply <= 4000 && totalSupply > 3000) {
-            price = 200000000000000000; // 0.2
+            price = 100000000000000000; // 0.1
         } else if (totalSupply > 4000) {
-            price = 400000000000000000; // 0.4
+            price = 200000000000000000; // 0.2
         }
 
         return price;
