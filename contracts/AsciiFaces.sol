@@ -35,16 +35,16 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         setBaseURI("https://api.asciifaces.com/face/");
 
         // mint 10 genesis faces
-        _registerToken(60, owner()); // ~|◕o◕|~
-        _registerToken(27, owner()); // ꒰✜益✜꒱
-        _registerToken(88, owner()); // (ʘ̆___ʘ̆)⌐
-        _registerToken(116, owner()); // :ʘ̆⌂ʘ̆:
-        _registerToken(156, owner()); // ヽ༼©ェ©༽ﾉ
-        _registerToken(242, owner()); // ◕ᴥ◕
-        _registerToken(332, owner()); // ⊂(ⱺ..ⱺ)つ
-        _registerToken(351, owner()); // ╚(°<>°)╝
-        _registerToken(424, owner()); // ⊂(ㆆ___ㆆ)つ
-        _registerToken(438, owner()); // |(◕︹◕)|
+        _registerToken(60, owner()); // ﾛ
+        _registerToken(27, owner()); // 〣(ಥ.ಥ)〣
+        _registerToken(44, owner()); // ヽ༼◔Д◔༽ﾉ
+        _registerToken(70, owner()); // [Φ▽Φ]
+        _registerToken(116, owner()); // (ﾉ×▿×)ﾉ
+        _registerToken(158, owner()); // ๑ᆺ๑
+        _registerToken(221, owner()); // 【＠益＠】
+        _registerToken(222, owner()); // ⊂(-֊-)⊃
+        _registerToken(233, owner()); // ヽ(◕ヮ◕)ﾉ
+        _registerToken(206, owner()); // ░(ఠ益ఠ)░
     }
 
     function getFace(uint256 id) external view returns (string memory) {
@@ -102,7 +102,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return face;
     }
 
-    function _createFace(uint256 _seed) public pure returns (string memory) {
+    function _createFace(uint256 _seed) internal pure returns (string memory) {
         uint256 rand = uint256(keccak256(abi.encodePacked(_seed)));
 
         string[2] memory edge = _getEdge(rand);
