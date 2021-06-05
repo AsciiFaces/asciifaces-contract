@@ -79,7 +79,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         require(hasSaleStarted == true, "Sale hasn't started");
         require(_tokenIdCounter.current() <= MAX_SUPPLY, "Sale has ended, you can still buy on secondary market");
 
-        wETH.safeTransferFrom(msg.sender, address(this), calculatePrice());
+        wETH.safeTransferFrom(msg.sender, owner(), calculatePrice());
 
         uint256 seed =
             uint256(keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, _tokenIdCounter.current())));

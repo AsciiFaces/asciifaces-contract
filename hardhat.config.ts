@@ -42,6 +42,10 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
+      mining: {
+        auto: false,
+        interval: 5000,
+      },
     },
     localhost: {
       url: "http://127.0.0.1:8545/",
