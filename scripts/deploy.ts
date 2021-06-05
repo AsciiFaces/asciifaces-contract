@@ -10,9 +10,7 @@ async function main(): Promise<void> {
 
   let WETH: string;
 
-  if (networkName === "testnet") {
-    WETH = "0x2d7882bedcbfddce29ba99965dd3cdf7fcb10a1e";
-  } else if (networkName === "mainnet") {
+  if (networkName === "mainnet") {
     WETH = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
   } else {
     const wethMock = await WethMockFactory.deploy();
