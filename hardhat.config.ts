@@ -48,6 +48,13 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545/",
     },
+    polygon: {
+      url: "https://rpc-mainnet.matic.quiknode.pro",
+      chainId: 137,
+      accounts: {
+        mnemonic,
+      },
+    },
     testnet: {
       url: "https://rpc-mumbai.maticvigil.com",
       chainId: 80001,
