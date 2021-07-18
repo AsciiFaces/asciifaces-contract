@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
-    using SafeERC20 for IERC20;
 
     Counters.Counter private _tokenIdCounter;
 
@@ -21,17 +20,13 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     uint256 private constant MOUTH_COUNT = 44;
     uint256 private constant EDGE_COUNT = 34;
 
-    IERC20 internal wETH;
-
     uint256 public constant MAX_SUPPLY = 5000;
 
     bool public hasSaleStarted = false;
 
     string public baseURI;
 
-    constructor(address weth) ERC721("AsciiFaces", "ASF") {
-        wETH = IERC20(weth);
-
+    constructor() ERC721("AsciiFaces", "ASF") {
         setBaseURI("https://api.asciifaces.com/face/");
 
         // mint 10 genesis faces
@@ -56,30 +51,9 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
         return face;
     }
 
-    function calculatePrice() public view returns (uint256) {
-        uint256 price;
-        uint256 totalSupply = _tokenIdCounter.current();
-
-        if (totalSupply <= 1000) {
-            price = 20000000000000000; // 0.02
-        } else if (totalSupply <= 2000 && totalSupply > 1000) {
-            price = 40000000000000000; // 0.04
-        } else if (totalSupply <= 3000 && totalSupply > 2000) {
-            price = 80000000000000000; // 0.8
-        } else if (totalSupply <= 4000 && totalSupply > 3000) {
-            price = 100000000000000000; // 0.1
-        } else if (totalSupply > 4000) {
-            price = 200000000000000000; // 0.2
-        }
-
-        return price;
-    }
-
     function createFace(uint256 _seed) public returns (string memory) {
         require(hasSaleStarted == true, "Sale hasn't started");
-        require(_tokenIdCounter.current() <= MAX_SUPPLY, "Sale has ended, you can still buy on secondary market");
-
-        wETH.safeTransferFrom(msg.sender, owner(), calculatePrice());
+        require(_tokenIdCounter.current() < MAX_SUPPLY, "Sale has ended, you can still buy on secondary market");
 
         uint256 seed =
             uint256(keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, _tokenIdCounter.current())));

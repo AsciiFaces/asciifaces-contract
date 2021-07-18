@@ -6,7 +6,6 @@ import { AsciiFaces } from "../typechain";
 import { deployContract } from "ethereum-waffle";
 import { expect } from "chai";
 import { WETHMock } from "../typechain/WETHMock";
-import { ethers } from "ethers";
 
 describe("AsciiFaces", () => {
   before(async function () {
@@ -22,7 +21,7 @@ describe("AsciiFaces", () => {
     const wethMockArtifact: Artifact = await hre.artifacts.readArtifact("WETHMock");
 
     this.mockETH = <WETHMock>await deployContract(this.signers.admin, wethMockArtifact);
-    this.asciiface = <AsciiFaces>await deployContract(this.signers.admin, asciifaceArtifact, [this.mockETH.address]);
+    this.asciiface = <AsciiFaces>await deployContract(this.signers.admin, asciifaceArtifact);
   });
 
   describe("Deploy Contract", function () {
@@ -37,7 +36,7 @@ describe("AsciiFaces", () => {
     it("should mint genesis token", async function () {
       const totalSupply = await this.asciiface.totalSupply();
 
-      expect(totalSupply).to.be.gte(0);
+      expect(totalSupply).to.be.eq(10);
     });
   });
 
@@ -63,13 +62,11 @@ describe("AsciiFaces", () => {
     it("should fail when weth is not approved yet", async function () {
       await this.asciiface.startSale();
 
-      await expect(this.asciiface.createFace(122332)).to.be.reverted;
+      await expect(this.asciiface.createFace(122332));
     });
 
     it("should mint token normally", async function () {
       await this.asciiface.startSale();
-      await this.mockETH.approve(this.asciiface.address, ethers.utils.parseEther("0.2"));
-
       const balanceBefore = await this.asciiface.balanceOf(this.signers.admin.address);
 
       await this.asciiface.createFace(122332);
@@ -77,66 +74,6 @@ describe("AsciiFaces", () => {
       const userBalance = await this.asciiface.balanceOf(this.signers.admin.address);
 
       expect(userBalance).to.be.gt(balanceBefore);
-    });
-
-    it("should revert when user have not enough WETH", async function () {
-      await this.asciiface.startSale();
-
-      await this.mockETH.connect(this.signers.bob).approve(this.asciiface.address, ethers.utils.parseEther("200000"));
-
-      await expect(this.asciiface.connect(this.signers.bob).createFace(1)).to.be.reverted;
-    });
-  });
-
-  describe("bonding curve price", function () {
-    it("should get price correctly", async function () {
-      await this.asciiface.startSale();
-      await this.mockETH.approve(this.asciiface.address, ethers.utils.parseEther("100000"));
-
-      // for (let i = 1; i <= 1000; i++) {
-      //   expect(await this.asciiface.calculatePrice()).to.eq(ethers.utils.parseEther("0.025"));
-
-      //   await expect(this.asciiface.createFace(i));
-
-      //   const face = await this.asciiface.getFace(i);
-      //   console.log(`minted face #${i} : ${face}`);
-      // }
-
-      // for (let i = 1001; i <= 2000; i++) {
-      //   expect(await this.asciiface.calculatePrice()).to.eq(ethers.utils.parseEther("0.05"));
-
-      //   await expect(this.asciiface.createFace(i));
-
-      //   const face = await this.asciiface.getFace(i);
-      //   console.log(`minted face #${i} : ${face}`);
-      // }
-
-      // for (let i = 2001; i <= 3000; i++) {
-      //   expect(await this.asciiface.calculatePrice()).to.eq(ethers.utils.parseEther("0.1"));
-
-      //   await expect(this.asciiface.createFace(i));
-
-      //   const face = await this.asciiface.getFace(i);
-      //   console.log(`minted face #${i} : ${face}`);
-      // }
-
-      // for (let i = 3001; i <= 4000; i++) {
-      //   expect(await this.asciiface.calculatePrice()).to.eq(ethers.utils.parseEther("0.2"));
-
-      //   await expect(this.asciiface.createFace(i));
-
-      //   const face = await this.asciiface.getFace(i);
-      //   console.log(`minted face #${i} : ${face}`);
-      // }
-
-      // for (let i = 4001; i <= 5000; i++) {
-      //   expect(await this.asciiface.calculatePrice()).to.eq(ethers.utils.parseEther("0.4"));
-
-      //   await expect(this.asciiface.createFace(i));
-
-      //   const face = await this.asciiface.getFace(i);
-      //   console.log(`minted face #${i} : ${face}`);
-      // }
     });
   });
 
