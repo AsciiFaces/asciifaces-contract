@@ -15,6 +15,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
 
     mapping(uint256 => uint256) internal idToSeed;
     mapping(uint256 => uint256) internal seedToId;
+    mapping(address => uint8) internal claimCount;
 
     uint256 private constant EYE_COUNT = 51;
     uint256 private constant MOUTH_COUNT = 44;
@@ -54,6 +55,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
     function createFace(uint256 _seed) public returns (string memory) {
         require(hasSaleStarted == true, "Sale hasn't started");
         require(_tokenIdCounter.current() < MAX_SUPPLY, "Sale has ended, you can still buy on secondary market");
+        require(claimCount[msg.sender] < 5, "Max claim per address is 5");
 
         uint256 seed =
             uint256(keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, _tokenIdCounter.current())));
@@ -65,6 +67,7 @@ contract AsciiFaces is ERC721, ERC721Enumerable, Ownable {
 
     function _registerToken(uint256 _seed, address to) internal returns (string memory) {
         _tokenIdCounter.increment();
+        claimCount[msg.sender]++;
 
         idToSeed[_tokenIdCounter.current()] = _seed;
         seedToId[_seed] = _tokenIdCounter.current();

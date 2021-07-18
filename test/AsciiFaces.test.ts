@@ -1,25 +1,28 @@
 import hre from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Signers } from "../types";
-import { Artifact } from "hardhat/types";
-import { AsciiFaces } from "../typechain";
-import { deployContract } from "ethereum-waffle";
 import { expect } from "chai";
+import { AsciiFaces } from "../typechain";
 
 describe("AsciiFaces", () => {
   before(async function () {
-    this.signers = {} as Signers;
+    this.signers = {};
 
-    const signers: SignerWithAddress[] = await hre.ethers.getSigners();
+    const signers = await hre.ethers.getSigners();
     this.signers.admin = signers[0];
     this.signers.bob = signers[1];
+
+    hre.getUnnamedAccounts;
   });
 
   beforeEach(async function () {
-    const asciifaceArtifact: Artifact = await hre.artifacts.readArtifact("AsciiFaces");
-    const wethMockArtifact: Artifact = await hre.artifacts.readArtifact("WETHMock");
+    await hre.deployments.fixture(["AsciiFaces"]);
 
-    this.asciiface = <AsciiFaces>await deployContract(this.signers.admin, asciifaceArtifact);
+    const deployment = await hre.deployments.get("AsciiFaces");
+
+    this.asciiface = (await hre.ethers.getContractAt(
+      "AsciiFaces",
+      deployment.address,
+      this.signers.admin,
+    )) as AsciiFaces;
   });
 
   describe("Deploy Contract", function () {
@@ -65,11 +68,11 @@ describe("AsciiFaces", () => {
 
     it("should mint token normally", async function () {
       await this.asciiface.startSale();
-      const balanceBefore = await this.asciiface.balanceOf(this.signers.admin.address);
+      const balanceBefore = await this.asciiface.balanceOf(await this.signers.admin.getAddress());
 
       await this.asciiface.createFace(122332);
 
-      const userBalance = await this.asciiface.balanceOf(this.signers.admin.address);
+      const userBalance = await this.asciiface.balanceOf(await this.signers.admin.getAddress());
 
       expect(userBalance).to.be.gt(balanceBefore);
     });
